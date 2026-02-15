@@ -1,0 +1,54 @@
+<div class="product-list-container">
+  <header class="header">
+    <div class="logo">
+      <h1>BANCO</h1>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="errorMessage && !isLoading" class="error-message">
+      <p>{{ errorMessage }}</p>
+      <button (click)="loadProducts()" class="btn-retry">Reintentar</button>
+    </div>
+
+    <!-- Products table -->
+    <div *ngIf="!isLoading && !errorMessage" class="products-section">
+      <div class="table-container">
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Nombre del producto</th>
+              <th>Descripción</th>
+              <th>Fecha de liberación</th>
+              <th>Fecha de reestructuración</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of filteredProducts">
+              <td>
+                <img [src]="product.logo" [alt]="product.name" class="product-logo">
+              </td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.description }}</td>
+              <td>{{ product.date_release | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ product.date_revision | date: 'dd/MM/yyyy' }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty state -->
+        <div *ngIf="filteredProducts.length === 0" class="empty-state">
+          <p>No se encontraron productos financieros</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

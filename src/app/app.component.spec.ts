@@ -1,10 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [
+        provideRouter([]),
+        provideHttpClient()
+      ]
     }).compileComponents();
   });
 
@@ -14,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'proyecto-devsu' title`, () => {
+  it('should have title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('proyecto-devsu');
+    expect(app.title).toBe('proyecto-devsu');
   });
 
-  it('should render title', () => {
+  it('should render router-outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, proyecto-devsu');
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });
