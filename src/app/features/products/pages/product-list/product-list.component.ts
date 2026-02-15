@@ -14,9 +14,17 @@ import { Product } from '../../../../core/models/product.model';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
+  paginatedProducts: Product[] = [];
   searchTerm: string = '';
   isLoading = false;
   errorMessage = '';
+  Math = Math;
+
+  // Paginación
+  itemsPerPage: number = 5;
+  currentPage: number = 1;
+  totalPages: number = 1;
+  pageSizeOptions: number[] = [5, 10, 20];
 
   constructor(private productService: ProductService) {}
 
@@ -32,6 +40,7 @@ export class ProductListComponent implements OnInit {
       next: (products) => {
         this.products = products;
         this.filteredProducts = products;
+        this.updatePagination();
         this.isLoading = false;
       },
       error: (error) => {
@@ -44,20 +53,83 @@ export class ProductListComponent implements OnInit {
   onSearch(): void {
     if (!this.searchTerm.trim()) {
       this.filteredProducts = this.products;
-      return;
+    } else {
+      const searchLower = this.searchTerm.toLowerCase().trim();
+      
+      this.filteredProducts = this.products.filter(product => 
+        product.name.toLowerCase().includes(searchLower) ||
+        product.description.toLowerCase().includes(searchLower) ||
+        product.id.toLowerCase().includes(searchLower)
+      );
     }
-
-    const searchLower = this.searchTerm.toLowerCase().trim();
     
-    this.filteredProducts = this.products.filter(product => 
-      product.name.toLowerCase().includes(searchLower) ||
-      product.description.toLowerCase().includes(searchLower) ||
-      product.id.toLowerCase().includes(searchLower)
-    );
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   clearSearch(): void {
     this.searchTerm = '';
     this.filteredProducts = this.products;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  onPageSizeChange(): void {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+    
+    // Si la página actual es mayor que el total de páginas, ir a la última página
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = this.totalPages;
+    }
+    
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
+  }
+
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  goToNextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    
+    if (this.totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      const startPage = Math.max(1, this.currentPage - 2);
+      const endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+    
+    return pages;
   }
 }
