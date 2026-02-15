@@ -18,8 +18,34 @@
       <button (click)="loadProducts()" class="btn-retry">Reintentar</button>
     </div>
 
-    <!-- Products table -->
+    <!-- Products section -->
     <div *ngIf="!isLoading && !errorMessage" class="products-section">
+      
+      <!-- Search bar -->
+      <div class="search-container">
+        <div class="search-wrapper">
+          <input 
+            type="text" 
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            placeholder="Buscar producto por nombre, descripción o ID..."
+            class="search-input"
+          >
+          <button 
+            *ngIf="searchTerm" 
+            (click)="clearSearch()" 
+            class="clear-button"
+            title="Limpiar búsqueda"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="results-count">
+          {{ filteredProducts.length }} resultado{{ filteredProducts.length !== 1 ? 's' : '' }}
+        </div>
+      </div>
+
+      <!-- Products table -->
       <div class="table-container">
         <table class="products-table">
           <thead>
@@ -44,9 +70,15 @@
           </tbody>
         </table>
 
-        <!-- Empty state -->
-        <div *ngIf="filteredProducts.length === 0" class="empty-state">
+        <!-- Empty results -->
+        <div *ngIf="filteredProducts.length === 0 && !searchTerm" class="empty-state">
           <p>No se encontraron productos financieros</p>
+        </div>
+
+        <!-- No results -->
+        <div *ngIf="filteredProducts.length === 0 && searchTerm" class="empty-state">
+          <p>No se encontraron productos que coincidan con "{{ searchTerm }}"</p>
+          <button (click)="clearSearch()" class="btn-clear-search">Limpiar búsqueda</button>
         </div>
       </div>
     </div>

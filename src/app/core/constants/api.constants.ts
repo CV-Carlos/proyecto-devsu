@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:3002',
+  BASE_URL: '', // Vacío por el proxy
   ENDPOINTS: {
     PRODUCTS: '/bp/products',
     VERIFICATION: '/bp/products/verification'
