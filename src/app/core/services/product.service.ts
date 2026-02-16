@@ -14,7 +14,7 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  // F1: Get all products
+  // F1: Obtener todos los productos
   getProducts(): Observable<Product[]> {
     return this.http.get<ApiResponse<Product[]>>(this.apiUrl).pipe(
       map(response => response.data || []),
@@ -22,7 +22,7 @@ export class ProductService {
     );
   }
 
-  // F4: Create product
+  // F4: Crear producto
   createProduct(product: Product): Observable<Product> {
     return this.http.post<ApiResponse<Product>>(this.apiUrl, product).pipe(
       map(response => response.data!),
@@ -30,7 +30,7 @@ export class ProductService {
     );
   }
 
-  // F5: Update product
+  // F5: Actualizar producto
   updateProduct(id: string, product: Product): Observable<Product> {
     return this.http.put<ApiResponse<Product>>(`${this.apiUrl}/${id}`, product).pipe(
       map(response => response.data!),
@@ -38,7 +38,7 @@ export class ProductService {
     );
   }
 
-  // F6: Delete product
+  // F6: Borror producto
   deleteProduct(id: string): Observable<string> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`).pipe(
       map(response => response.message),
@@ -46,17 +46,15 @@ export class ProductService {
     );
   }
 
-  // Verify ID exists
+  // Verificar ID con el backend
   verifyIdExists(id: string): Observable<boolean> {
     const verificationUrl = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.VERIFICATION}/${id}`;
-    return this.http.get<boolean>(verificationUrl).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.get<boolean>(verificationUrl).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = API_MESSAGES.ERROR_GENERIC;
-    
+
     if (error.error instanceof ErrorEvent) {
       errorMessage = API_MESSAGES.ERROR_NETWORK;
     } else {
@@ -66,7 +64,7 @@ export class ProductService {
         errorMessage = error.error.message;
       }
     }
-    
+
     return throwError(() => new Error(errorMessage));
   }
 }

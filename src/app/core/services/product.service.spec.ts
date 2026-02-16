@@ -11,11 +11,7 @@ describe('ProductService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        ProductService,
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
+      providers: [ProductService, provideHttpClient(), provideHttpClientTesting()]
     });
     service = TestBed.inject(ProductService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -59,7 +55,9 @@ describe('ProductService', () => {
       expect(exists).toBe(true);
     });
 
-    const req = httpMock.expectOne(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.VERIFICATION}/${testId}`);
+    const req = httpMock.expectOne(
+      `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.VERIFICATION}/${testId}`
+    );
     expect(req.request.method).toBe('GET');
     req.flush(true);
   });
@@ -110,7 +108,9 @@ describe('ProductService', () => {
       expect(message).toBe('Product removed successfully');
     });
 
-    const req = httpMock.expectOne(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}/${productId}`);
+    const req = httpMock.expectOne(
+      `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}/${productId}`
+    );
     expect(req.request.method).toBe('DELETE');
     req.flush({ message: 'Product removed successfully' });
   });
@@ -118,7 +118,7 @@ describe('ProductService', () => {
   it('should handle error when getting products', () => {
     service.getProducts().subscribe({
       next: () => fail('should have failed'),
-      error: (error) => {
+      error: error => {
         expect(error.message).toBeTruthy();
       }
     });
@@ -130,7 +130,7 @@ describe('ProductService', () => {
   it('should handle 404 error', () => {
     service.getProducts().subscribe({
       next: () => fail('should have failed'),
-      error: (error) => {
+      error: error => {
         expect(error.message).toContain('Producto no encontrado');
       }
     });

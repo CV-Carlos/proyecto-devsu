@@ -4,14 +4,14 @@
   <main class="main-content">
     <a [routerLink]="['/products']" class="back-link">← Volver al listado</a>
     <div class="form-section">
-      <h2>{{ isEditMode ? 'Editar Producto' : 'Formulario de Registro' }}</h2>
+      <h2>Formulario de Registro</h2>
 
-      <!-- Success message -->
+      <!-- Envio exitoso -->
       <div *ngIf="successMessage" class="success-message">
         {{ successMessage }}
       </div>
 
-      <!-- Error message -->
+      <!-- Error en envio -->
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
@@ -27,7 +27,7 @@
               formControlName="id"
               [class.invalid]="isFieldInvalid('id')"
               placeholder="Ej: trj-001"
-            >
+            />
             <span *ngIf="getFieldError('id')" class="error-text">
               {{ getFieldError('id') }}
             </span>
@@ -41,7 +41,7 @@
               formControlName="name"
               [class.invalid]="isFieldInvalid('name')"
               placeholder="Ej: Tarjeta de Crédito"
-            >
+            />
             <span *ngIf="getFieldError('name')" class="error-text">
               {{ getFieldError('name') }}
             </span>
@@ -72,7 +72,7 @@
               formControlName="logo"
               [class.invalid]="isFieldInvalid('logo')"
               placeholder="Ej: https://www.ejemplo.com/logo.png"
-            >
+            />
             <span *ngIf="getFieldError('logo')" class="error-text">
               {{ getFieldError('logo') }}
             </span>
@@ -89,7 +89,7 @@
               formControlName="date_release"
               [min]="today"
               [class.invalid]="isFieldInvalid('date_release')"
-            >
+            />
             <span *ngIf="getFieldError('date_release')" class="error-text">
               {{ getFieldError('date_release') }}
             </span>
@@ -103,20 +103,19 @@
               formControlName="date_revision"
               [class.invalid]="isFieldInvalid('date_revision')"
               readonly
-            >
+            />
             <span *ngIf="getFieldError('date_revision')" class="error-text">
               {{ getFieldError('date_revision') }}
             </span>
           </div>
         </div>
 
-        <!-- Botones -->
         <div class="form-actions">
           <button type="button" (click)="onReset()" class="btn-secondary" [disabled]="isSubmitting">
             Reiniciar
           </button>
           <button type="submit" class="btn-primary" [disabled]="isSubmitting">
-            {{ isSubmitting ? 'Enviando...' : (isEditMode ? 'Actualizar' : 'Agregar') }}
+            {{ isSubmitting ? 'Enviando...' : 'Enviar' }}
           </button>
         </div>
       </form>

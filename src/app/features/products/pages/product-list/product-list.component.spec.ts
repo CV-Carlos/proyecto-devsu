@@ -20,9 +20,7 @@ describe('ProductListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ProductListComponent],
-      providers: [
-        { provide: ProductService, useValue: mockProductService }
-      ]
+      providers: [{ provide: ProductService, useValue: mockProductService }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProductListComponent);
@@ -56,15 +54,17 @@ describe('ProductListComponent', () => {
   });
 
   it('should paginate products correctly', () => {
-    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
-      new Product({
-        id: `test${i}`,
-        name: `Test Product ${i}`,
-        description: `Description ${i}`,
-        logo: 'logo.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
+    const mockProducts: Product[] = Array.from(
+      { length: 15 },
+      (_, i) =>
+        new Product({
+          id: `test${i}`,
+          name: `Test Product ${i}`,
+          description: `Description ${i}`,
+          logo: 'logo.png',
+          date_release: '2024-01-01',
+          date_revision: '2025-01-01'
+        })
     );
 
     component.products = mockProducts;
@@ -77,15 +77,17 @@ describe('ProductListComponent', () => {
   });
 
   it('should change page size', () => {
-    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
-      new Product({
-        id: `test${i}`,
-        name: `Test Product ${i}`,
-        description: `Description ${i}`,
-        logo: 'logo.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
+    const mockProducts: Product[] = Array.from(
+      { length: 15 },
+      (_, i) =>
+        new Product({
+          id: `test${i}`,
+          name: `Test Product ${i}`,
+          description: `Description ${i}`,
+          logo: 'logo.png',
+          date_release: '2024-01-01',
+          date_revision: '2025-01-01'
+        })
     );
 
     component.products = mockProducts;
@@ -103,15 +105,17 @@ describe('ProductListComponent', () => {
   });
 
   it('should navigate to next page', () => {
-    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
-      new Product({
-        id: `test${i}`,
-        name: `Test Product ${i}`,
-        description: `Description ${i}`,
-        logo: 'logo.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
+    const mockProducts: Product[] = Array.from(
+      { length: 15 },
+      (_, i) =>
+        new Product({
+          id: `test${i}`,
+          name: `Test Product ${i}`,
+          description: `Description ${i}`,
+          logo: 'logo.png',
+          date_release: '2024-01-01',
+          date_revision: '2025-01-01'
+        })
     );
 
     component.products = mockProducts;
@@ -127,15 +131,17 @@ describe('ProductListComponent', () => {
   });
 
   it('should navigate to previous page', () => {
-    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
-      new Product({
-        id: `test${i}`,
-        name: `Test Product ${i}`,
-        description: `Description ${i}`,
-        logo: 'logo.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
+    const mockProducts: Product[] = Array.from(
+      { length: 15 },
+      (_, i) =>
+        new Product({
+          id: `test${i}`,
+          name: `Test Product ${i}`,
+          description: `Description ${i}`,
+          logo: 'logo.png',
+          date_release: '2024-01-01',
+          date_revision: '2025-01-01'
+        })
     );
 
     component.products = mockProducts;
@@ -157,15 +163,17 @@ describe('ProductListComponent', () => {
   });
 
   it('should reset to page 1 when searching', () => {
-    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
-      new Product({
-        id: `test${i}`,
-        name: `Test Product ${i}`,
-        description: `Description ${i}`,
-        logo: 'logo.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
+    const mockProducts: Product[] = Array.from(
+      { length: 15 },
+      (_, i) =>
+        new Product({
+          id: `test${i}`,
+          name: `Test Product ${i}`,
+          description: `Description ${i}`,
+          logo: 'logo.png',
+          date_release: '2024-01-01',
+          date_revision: '2025-01-01'
+        })
     );
 
     component.products = mockProducts;
@@ -240,9 +248,7 @@ describe('ProductListComponent', () => {
 
   it('should handle error when loading products', () => {
     const errorMessage = 'Error loading products';
-    mockProductService.getProducts.mockReturnValue(
-      throwError(() => new Error(errorMessage))
-    );
+    mockProductService.getProducts.mockReturnValue(throwError(() => new Error(errorMessage)));
 
     component.ngOnInit();
 
@@ -251,15 +257,17 @@ describe('ProductListComponent', () => {
   });
 
   it('should generate page numbers correctly', () => {
-    const mockProducts: Product[] = Array.from({ length: 30 }, (_, i) => 
-      new Product({
-        id: `test${i}`,
-        name: `Test Product ${i}`,
-        description: `Description ${i}`,
-        logo: 'logo.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
+    const mockProducts: Product[] = Array.from(
+      { length: 30 },
+      (_, i) =>
+        new Product({
+          id: `test${i}`,
+          name: `Test Product ${i}`,
+          description: `Description ${i}`,
+          logo: 'logo.png',
+          date_release: '2024-01-01',
+          date_revision: '2025-01-01'
+        })
     );
 
     component.products = mockProducts;
@@ -271,5 +279,217 @@ describe('ProductListComponent', () => {
 
     expect(pageNumbers.length).toBeGreaterThan(0);
     expect(pageNumbers.length).toBeLessThanOrEqual(5);
+  });
+
+  it('should toggle context menu', () => {
+    component.openMenuId = null;
+
+    component.toggleMenu('test123');
+    expect(component.openMenuId).toBe('test123');
+
+    component.toggleMenu('test123');
+    expect(component.openMenuId).toBeNull();
+  });
+
+  it('should close menu when toggling different product', () => {
+    component.openMenuId = 'test123';
+
+    component.toggleMenu('test456');
+    expect(component.openMenuId).toBe('test456');
+  });
+
+  it('should navigate to edit page', () => {
+    const navigateSpy = jest.spyOn(component['router'], 'navigate');
+    component.openMenuId = 'test123';
+
+    component.editProduct('test123');
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/products/edit', 'test123']);
+    expect(component.openMenuId).toBeNull();
+  });
+
+  it('should open delete modal', () => {
+    const mockProduct = new Product({
+      id: 'test123',
+      name: 'Test Product',
+      description: 'Test Description',
+      logo: 'logo.png',
+      date_release: '2024-01-01',
+      date_revision: '2025-01-01'
+    });
+
+    component.products = [mockProduct];
+    component.openMenuId = 'test123';
+
+    component.deleteProduct('test123');
+
+    expect(component.isModalOpen).toBe(true);
+    expect(component.productToDelete).toEqual(mockProduct);
+    expect(component.openMenuId).toBeNull();
+  });
+
+  it('should not open modal if product not found', () => {
+    component.products = [];
+    component.deleteProduct('nonexistent');
+
+    expect(component.isModalOpen).toBe(false);
+    expect(component.productToDelete).toBeNull();
+  });
+
+  it('should delete product on confirm', done => {
+    const mockProduct = new Product({
+      id: 'test123',
+      name: 'Test Product',
+      description: 'Test Description',
+      logo: 'logo.png',
+      date_release: '2024-01-01',
+      date_revision: '2025-01-01'
+    });
+
+    const mockProduct2 = new Product({
+      id: 'test456',
+      name: 'Test Product 2',
+      description: 'Test Description 2',
+      logo: 'logo2.png',
+      date_release: '2024-01-01',
+      date_revision: '2025-01-01'
+    });
+
+    component.products = [mockProduct, mockProduct2];
+    component.filteredProducts = [mockProduct, mockProduct2];
+    component.productToDelete = mockProduct;
+    component.isModalOpen = true;
+
+    mockProductService.deleteProduct.mockReturnValue(of('Product deleted'));
+
+    component.onConfirmDelete();
+
+    setTimeout(() => {
+      expect(mockProductService.deleteProduct).toHaveBeenCalledWith('test123');
+      expect(component.products.length).toBe(1);
+      expect(component.products[0].id).toBe('test456');
+      expect(component.isModalOpen).toBe(false);
+      expect(component.productToDelete).toBeNull();
+      expect(component.isDeleting).toBe(false);
+      done();
+    }, 100);
+  });
+
+  it('should handle error on delete', done => {
+    const mockProduct = new Product({
+      id: 'test123',
+      name: 'Test Product',
+      description: 'Test Description',
+      logo: 'logo.png',
+      date_release: '2024-01-01',
+      date_revision: '2025-01-01'
+    });
+
+    component.products = [mockProduct];
+    component.productToDelete = mockProduct;
+    component.isModalOpen = true;
+
+    const error = new Error('Error deleting product');
+    mockProductService.deleteProduct.mockReturnValue(throwError(() => error));
+
+    component.onConfirmDelete();
+
+    setTimeout(() => {
+      expect(component.errorMessage).toBe('Error deleting product');
+      expect(component.isModalOpen).toBe(false);
+      expect(component.productToDelete).toBeNull();
+      expect(component.isDeleting).toBe(false);
+      done();
+    }, 100);
+  });
+
+  it('should cancel delete', () => {
+    const mockProduct = new Product({
+      id: 'test123',
+      name: 'Test Product',
+      description: 'Test Description',
+      logo: 'logo.png',
+      date_release: '2024-01-01',
+      date_revision: '2025-01-01'
+    });
+
+    component.productToDelete = mockProduct;
+    component.isModalOpen = true;
+
+    component.onCancelDelete();
+
+    expect(component.isModalOpen).toBe(false);
+    expect(component.productToDelete).toBeNull();
+  });
+
+  it('should not delete if productToDelete is null', () => {
+    component.productToDelete = null;
+    component.onConfirmDelete();
+
+    expect(mockProductService.deleteProduct).not.toHaveBeenCalled();
+  });
+
+  it('should close menu on document click outside', () => {
+    component.openMenuId = 'test123';
+
+    const mockEvent = {
+      target: document.createElement('div')
+    } as any;
+
+    component.onDocumentClick(mockEvent);
+
+    expect(component.openMenuId).toBeNull();
+  });
+
+  it('should not close menu on menu button click', () => {
+    component.openMenuId = 'test123';
+
+    const menuButton = document.createElement('button');
+    menuButton.classList.add('btn-menu');
+
+    const mockEvent = {
+      target: menuButton
+    } as any;
+
+    jest.spyOn(menuButton, 'closest').mockReturnValue(menuButton);
+    jest.spyOn(mockEvent.target as HTMLElement, 'closest').mockReturnValue(menuButton);
+
+    component.onDocumentClick(mockEvent);
+
+    expect(component.openMenuId).toBe('test123');
+  });
+
+  it('should update pagination after delete', done => {
+    const mockProducts = Array.from(
+      { length: 15 },
+      (_, i) =>
+        new Product({
+          id: `test${i}`,
+          name: `Test Product ${i}`,
+          description: `Description ${i}`,
+          logo: 'logo.png',
+          date_release: '2024-01-01',
+          date_revision: '2025-01-01'
+        })
+    );
+
+    component.products = mockProducts;
+    component.filteredProducts = mockProducts;
+    component.itemsPerPage = 5;
+    component.currentPage = 3;
+    component.updatePagination();
+
+    const productToDelete = mockProducts[0];
+    component.productToDelete = productToDelete;
+
+    mockProductService.deleteProduct.mockReturnValue(of('Deleted'));
+
+    component.onConfirmDelete();
+
+    setTimeout(() => {
+      expect(component.products.length).toBe(14);
+      expect(component.filteredProducts.length).toBe(14);
+      done();
+    }, 100);
   });
 });

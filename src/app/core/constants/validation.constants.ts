@@ -51,6 +51,7 @@ export const VALIDATION_MESSAGES = {
   },
   DATE_REVISION: {
     REQUIRED: 'Fecha de revisión es requerida!',
-    INVALID_DATE: 'Fecha de revisión debe ser exactamente un año posterior a la fecha de liberación!'
+    INVALID_DATE:
+      'Fecha de revisión debe ser exactamente un año posterior a la fecha de liberación!'
   }
 };

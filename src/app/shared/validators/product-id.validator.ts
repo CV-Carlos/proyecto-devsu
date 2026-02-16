@@ -17,9 +17,9 @@ export class ProductIdValidator {
 
       return of(control.value).pipe(
         debounceTime(500),
-        switchMap(id => 
+        switchMap(id =>
           productService.verifyIdExists(id).pipe(
-            map(exists => exists ? { idExists: true } : null),
+            map(exists => (exists ? { idExists: true } : null)),
             catchError(() => of(null))
           )
         ),

@@ -1,163 +1,161 @@
 <div class="product-list-container">
-    <app-header></app-header>
+  <app-header></app-header>
 
-    <main class="main-content">
-        <!-- Loading state -->
-        <div *ngIf="isLoading" class="loading">
-            <div class="spinner"></div>
-            <p>Cargando productos...</p>
-        </div>
+  <main class="main-content">
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
 
-        <!-- Error state -->
-        <div *ngIf="errorMessage && !isLoading" class="error-message">
-            <p>{{ errorMessage }}</p>
-            <button (click)="loadProducts()" class="btn-retry">Reintentar</button>
-        </div>
+    <!-- Error al cargar el sistema -->
+    <div *ngIf="errorMessage && !isLoading" class="error-message">
+      <p>{{ errorMessage }}</p>
+      <button (click)="loadProducts()" class="btn-retry">Reintentar</button>
+    </div>
 
-        <!-- Search bar -->
-        <div *ngIf="!isLoading && !errorMessage" class="search-section">
-            <div class="search-wrapper">
-                <input 
-                    type="text" 
-                    [(ngModel)]="searchTerm"
-                    (input)="onSearch()"
-                    placeholder="Buscar producto por nombre, descripción o ID..."
-                    class="search-input"
+    <!-- Barra de busqueda -->
+    <div *ngIf="!isLoading && !errorMessage" class="search-section">
+      <div class="search-wrapper">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+          placeholder="Buscar producto por nombre, descripción o ID..."
+          class="search-input"
+        />
+        <button
+          *ngIf="searchTerm"
+          (click)="clearSearch()"
+          class="clear-button"
+          title="Limpiar búsqueda"
+        >
+          ✕
+        </button>
+      </div>
+      <button class="btn-add" [routerLink]="['/products/new']">Agregar</button>
+    </div>
+
+    <!-- Lista de productos -->
+    <div *ngIf="!isLoading && !errorMessage" class="products-section">
+      <div class="table-container">
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Nombre del producto</th>
+              <th>Descripción</th>
+              <th>Fecha de liberación</th>
+              <th>Fecha de reestructuración</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of paginatedProducts">
+              <td>
+                <img [src]="product.logo" [alt]="product.name" class="product-logo" />
+              </td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.description }}</td>
+              <td>{{ product.date_release | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ product.date_revision | date: 'dd/MM/yyyy' }}</td>
+              <td class="actions-cell">
+                <button
+                  class="btn-menu"
+                  [class.active]="openMenuId === product.id"
+                  (click)="toggleMenu(product.id)"
+                  title="Opciones"
                 >
-                <button 
-                    *ngIf="searchTerm" 
-                    (click)="clearSearch()" 
-                    class="clear-button"
-                    title="Limpiar búsqueda"
-                >
-                ✕
+                  ⋮
                 </button>
-            </div>
-            <button class="btn-add" [routerLink]="['/products/new']">
-                Agregar
-            </button>
+                <!-- Menu para productos -->
+                <div class="context-menu" *ngIf="openMenuId === product.id">
+                  <button (click)="editProduct(product.id)" class="menu-item">Editar</button>
+                  <button (click)="deleteProduct(product.id)" class="menu-item menu-item-delete">
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div *ngIf="filteredProducts.length === 0 && !searchTerm" class="empty-state">
+          <p>No se encontraron productos financieros</p>
         </div>
 
-        <!-- Products section -->
-        <div *ngIf="!isLoading && !errorMessage" class="products-section">
-        
-             <!-- Products table -->
-            <div class="table-container">
-                <table class="products-table">
-                    <thead>
-                        <tr>
-                            <th>Logo</th>
-                            <th>Nombre del producto</th>
-                            <th>Descripción</th>
-                            <th>Fecha de liberación</th>
-                            <th>Fecha de reestructuración</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let product of paginatedProducts">
-                            <td>
-                                <img [src]="product.logo" [alt]="product.name" class="product-logo">
-                            </td>
-                            <td>{{ product.name }}</td>
-                            <td>{{ product.description }}</td>
-                            <td>{{ product.date_release | date: 'dd/MM/yyyy' }}</td>
-                            <td>{{ product.date_revision | date: 'dd/MM/yyyy' }}</td>
-                            <td class="actions-cell">
-                                <button 
-                                  class="btn-menu" 
-                                  [class.active]="openMenuId === product.id"
-                                  (click)="toggleMenu(product.id)"
-                                  title="Opciones"
-                                >
-                                ⋮
-                                </button>
-                                <!-- Product options -->
-                                <div class="context-menu" *ngIf="openMenuId === product.id">
-                                    <button (click)="editProduct(product.id)" class="menu-item">
-                                        Editar
-                                    </button>
-                                    <button (click)="deleteProduct(product.id)" class="menu-item menu-item-delete">
-                                        Eliminar
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Empty state -->
-                <div *ngIf="filteredProducts.length === 0 && !searchTerm" class="empty-state">
-                    <p>No se encontraron productos financieros</p>
-                </div>
-
-                <!-- No results state -->
-                <div *ngIf="filteredProducts.length === 0 && searchTerm" class="empty-state">
-                    <p>No se encontraron productos que coincidan con "{{ searchTerm }}"</p>
-                    <button (click)="clearSearch()" class="btn-clear-search">Limpiar búsqueda</button>
-                </div>
-            </div>
-
-            <!-- Paginantion Controls and Results count -->
-            <div class="table-controls">
-                <div class="results-info">
-                    <span class="results-count">
-                        {{ filteredProducts.length }} resultado{{ filteredProducts.length !== 1 ? 's' : '' }}
-                    </span>
-                </div>
-            
-                <div class="page-size-selector">
-                    <label for="pageSize">Mostrar:</label>
-                    <select 
-                      id="pageSize"
-                      [(ngModel)]="itemsPerPage" 
-                      (change)="onPageSizeChange()"
-                      class="page-size-select"
-                    >
-                    <option *ngFor="let size of pageSizeOptions" [value]="size">
-                      {{ size }}
-                    </option>
-                    </select>
-                    <span>registros</span>
-                </div>
-            </div>
-
-            <!-- Pagination -->
-            <div *ngIf="filteredProducts.length > 0 && totalPages > 1" class="pagination">
-                <button 
-                  (click)="goToPreviousPage()" 
-                  [disabled]="currentPage === 1"
-                  class="pagination-btn"
-                >
-                    Anterior
-                </button>
-            
-                <div class="pagination-numbers">
-                    <button
-                      *ngFor="let page of getPageNumbers()"
-                      (click)="goToPage(page)"
-                      [class.active]="page === currentPage"
-                      class="pagination-number"
-                    >
-                        {{ page }}
-                    </button>
-                </div>
-            
-                <button 
-                    (click)="goToNextPage()" 
-                    [disabled]="currentPage === totalPages"
-                    class="pagination-btn"
-                >
-                    Siguiente
-                </button>
-            </div>
-        
-            <!-- Pagination info -->
-            <div *ngIf="filteredProducts.length > 0" class="pagination-info">
-                Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} 
-                a {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} 
-                de {{ filteredProducts.length }} registros
-            </div>
+        <div *ngIf="filteredProducts.length === 0 && searchTerm" class="empty-state">
+          <p>No se encontraron productos que coincidan con "{{ searchTerm }}"</p>
+          <button (click)="clearSearch()" class="btn-clear-search">Limpiar búsqueda</button>
         </div>
-    </main>
+      </div>
+
+      <!-- Paginacion y controles -->
+      <div class="table-controls">
+        <div class="results-info">
+          <span class="results-count">
+            {{ filteredProducts.length }} resultado{{ filteredProducts.length !== 1 ? 's' : '' }}
+          </span>
+        </div>
+
+        <div class="page-size-selector">
+          <label for="pageSize">Mostrar:</label>
+          <select
+            id="pageSize"
+            [(ngModel)]="itemsPerPage"
+            (change)="onPageSizeChange()"
+            class="page-size-select"
+          >
+            <option *ngFor="let size of pageSizeOptions" [value]="size">
+              {{ size }}
+            </option>
+          </select>
+          <span>registros</span>
+        </div>
+      </div>
+
+      <!-- Paginacion -->
+      <div *ngIf="filteredProducts.length > 0 && totalPages > 1" class="pagination">
+        <button (click)="goToPreviousPage()" [disabled]="currentPage === 1" class="pagination-btn">
+          Anterior
+        </button>
+
+        <div class="pagination-numbers">
+          <button
+            *ngFor="let page of getPageNumbers()"
+            (click)="goToPage(page)"
+            [class.active]="page === currentPage"
+            class="pagination-number"
+          >
+            {{ page }}
+          </button>
+        </div>
+
+        <button
+          (click)="goToNextPage()"
+          [disabled]="currentPage === totalPages"
+          class="pagination-btn"
+        >
+          Siguiente
+        </button>
+      </div>
+
+      <div *ngIf="filteredProducts.length > 0" class="pagination-info">
+        Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} a
+        {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} de
+        {{ filteredProducts.length }} registros
+      </div>
+    </div>
+  </main>
+
+  <app-confirmation-modal
+    [isOpen]="isModalOpen"
+    [title]="'Confirmar eliminación'"
+    [message]="'¿Estás seguro de eliminar el producto ' + (productToDelete?.name || '') + '?'"
+    [confirmText]="'Confirmar'"
+    [cancelText]="'Cancelar'"
+    [isProcessing]="isDeleting"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()"
+  >
+  </app-confirmation-modal>
 </div>

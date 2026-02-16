@@ -37,7 +37,7 @@
   text-decoration: underline;
 }
 
-/* Messages */
+/* Mensajes */
 .success-message {
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
@@ -115,7 +115,7 @@
   margin-top: 0.25rem;
 }
 
-/* Buttons */
+/* Botones */
 .form-actions {
   display: flex;
   gap: 1rem;

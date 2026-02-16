@@ -1,5 +1,6 @@
+// Proxy para poder hacer uso del backend
 export const API_CONFIG = {
-  BASE_URL: '', // Vacío por el proxy
+  BASE_URL: '',
   ENDPOINTS: {
     PRODUCTS: '/bp/products',
     VERIFICATION: '/bp/products/verification'

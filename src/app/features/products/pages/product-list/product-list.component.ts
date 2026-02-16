@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../core/services/product.service';
 import { Product } from '../../../../core/models/product.model';
 import { Router, RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
+import { ConfirmationModalComponent } from '../../../../shared/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, RouterLink],
+  imports: [CommonModule, FormsModule, HeaderComponent, RouterLink, ConfirmationModalComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
@@ -21,9 +22,14 @@ export class ProductListComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   Math = Math;
-  openMenuId: string | null = null;
 
-  // Paginación
+  // Menu
+  openMenuId: string | null = null;
+  isModalOpen = false;
+  productToDelete: Product | null = null;
+  isDeleting = false;
+
+  // Pagination
   itemsPerPage: number = 5;
   currentPage: number = 1;
   totalPages: number = 1;
@@ -38,18 +44,26 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.btn-menu') && !target.closest('.context-menu')) {
+      this.openMenuId = null;
+    }
+  }
+
   loadProducts(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    
+
     this.productService.getProducts().subscribe({
-      next: (products) => {
+      next: products => {
         this.products = products;
         this.filteredProducts = products;
         this.updatePagination();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: error => {
         this.errorMessage = error.message;
         this.isLoading = false;
       }
@@ -61,14 +75,15 @@ export class ProductListComponent implements OnInit {
       this.filteredProducts = this.products;
     } else {
       const searchLower = this.searchTerm.toLowerCase().trim();
-      
-      this.filteredProducts = this.products.filter(product => 
-        product.name.toLowerCase().includes(searchLower) ||
-        product.description.toLowerCase().includes(searchLower) ||
-        product.id.toLowerCase().includes(searchLower)
+
+      this.filteredProducts = this.products.filter(
+        product =>
+          product.name.toLowerCase().includes(searchLower) ||
+          product.description.toLowerCase().includes(searchLower) ||
+          product.id.toLowerCase().includes(searchLower)
       );
     }
-    
+
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -87,12 +102,11 @@ export class ProductListComponent implements OnInit {
 
   updatePagination(): void {
     this.totalPages = Math.ceil(this.filteredProducts.length / this.itemsPerPage);
-    
-    // Si la página actual es mayor que el total de páginas, ir a la última página
+
     if (this.currentPage > this.totalPages && this.totalPages > 0) {
       this.currentPage = this.totalPages;
     }
-    
+
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
@@ -122,7 +136,7 @@ export class ProductListComponent implements OnInit {
   getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxPagesToShow = 5;
-    
+
     if (this.totalPages <= maxPagesToShow) {
       for (let i = 1; i <= this.totalPages; i++) {
         pages.push(i);
@@ -130,12 +144,12 @@ export class ProductListComponent implements OnInit {
     } else {
       const startPage = Math.max(1, this.currentPage - 2);
       const endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
-      
+
       for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
     }
-    
+
     return pages;
   }
 
@@ -150,7 +164,45 @@ export class ProductListComponent implements OnInit {
 
   deleteProduct(productId: string): void {
     this.openMenuId = null;
-    // TODO: Implementar modal de confirmación (F6)
-    console.log('Delete product:', productId);
+    const product = this.products.find(p => p.id === productId);
+    if (product) {
+      this.productToDelete = product;
+      this.isModalOpen = true;
+    }
+  }
+
+  onConfirmDelete(): void {
+    if (!this.productToDelete) return;
+
+    this.isDeleting = true;
+
+    this.productService.deleteProduct(this.productToDelete.id).subscribe({
+      next: () => {
+        // Eliminar el producto de la lista local
+        this.products = this.products.filter(p => p.id !== this.productToDelete!.id);
+        this.filteredProducts = this.filteredProducts.filter(
+          p => p.id !== this.productToDelete!.id
+        );
+
+        // Actualizar paginación
+        this.updatePagination();
+
+        // Cerrar modal
+        this.isModalOpen = false;
+        this.productToDelete = null;
+        this.isDeleting = false;
+      },
+      error: error => {
+        this.errorMessage = error.message;
+        this.isDeleting = false;
+        this.isModalOpen = false;
+        this.productToDelete = null;
+      }
+    });
+  }
+
+  onCancelDelete(): void {
+    this.isModalOpen = false;
+    this.productToDelete = null;
   }
 }

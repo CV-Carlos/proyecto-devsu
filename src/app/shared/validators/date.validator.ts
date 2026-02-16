@@ -10,7 +10,7 @@ export class DateValidator {
 
       const inputDate = new Date(control.value);
       const compareDate = new Date(minDate);
-      
+
       // Resetear las horas para comparar solo fechas
       inputDate.setHours(0, 0, 0, 0);
       compareDate.setHours(0, 0, 0, 0);

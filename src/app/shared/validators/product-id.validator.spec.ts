@@ -55,9 +55,7 @@ describe('ProductIdValidator', () => {
   });
 
   it('should handle service errors gracefully', async () => {
-    mockProductService.verifyIdExists.mockReturnValue(
-      throwError(() => new Error('Service error'))
-    );
+    mockProductService.verifyIdExists.mockReturnValue(throwError(() => new Error('Service error')));
     const validator = ProductIdValidator.createValidator(mockProductService);
     const control = new FormControl('testid');
 

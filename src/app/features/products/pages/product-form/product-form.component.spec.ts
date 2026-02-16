@@ -74,7 +74,7 @@ describe('ProductFormComponent', () => {
 
   it('should validate required fields', () => {
     component.initForm();
-    
+
     const idControl = component.productForm.get('id');
     const nameControl = component.productForm.get('name');
     const descControl = component.productForm.get('description');
@@ -165,7 +165,7 @@ describe('ProductFormComponent', () => {
 
   it('should return error messages for invalid fields', () => {
     component.initForm();
-    
+
     const idControl = component.productForm.get('id');
     idControl?.setValue('');
     idControl?.markAsTouched();
@@ -204,7 +204,7 @@ describe('ProductFormComponent', () => {
 
   it('should set edit mode when ID is in route', () => {
     mockActivatedRoute.snapshot.paramMap.get.mockReturnValue('edit123');
-    
+
     const testProduct = new Product({
       id: 'edit123',
       name: 'Edit Product',
@@ -225,7 +225,7 @@ describe('ProductFormComponent', () => {
 
   it('should disable ID field in edit mode', () => {
     mockActivatedRoute.snapshot.paramMap.get.mockReturnValue('edit123');
-    
+
     const testProduct = new Product({
       id: 'edit123',
       name: 'Edit Product',
@@ -252,7 +252,7 @@ describe('ProductFormComponent', () => {
 
     expect(component.errorMessage).toBe('Producto no encontrado');
   });
-  it('should handle successful product creation', (done) => {
+  it('should handle successful product creation', done => {
     component.initForm();
     component.isEditMode = false;
 
@@ -289,7 +289,7 @@ describe('ProductFormComponent', () => {
     }, 100);
   });
 
-  it('should handle successful product update', (done) => {
+  it('should handle successful product update', done => {
     component.initForm();
     component.isEditMode = true;
     component.currentProductId = 'edit123';
@@ -325,7 +325,7 @@ describe('ProductFormComponent', () => {
     }, 100);
   });
 
-  it('should handle error on product creation', (done) => {
+  it('should handle error on product creation', done => {
     component.initForm();
     component.isEditMode = false;
 
@@ -352,7 +352,7 @@ describe('ProductFormComponent', () => {
     }, 100);
   });
 
-  it('should handle error on product update', (done) => {
+  it('should handle error on product update', done => {
     component.initForm();
     component.isEditMode = true;
     component.currentProductId = 'edit123';
@@ -401,16 +401,20 @@ describe('ProductFormComponent', () => {
     expect(component.getFieldError('date_release')).toBe('Fecha de liberación es requerida!');
 
     dateReleaseControl?.setErrors({ minDate: true });
-    expect(component.getFieldError('date_release')).toBe('Fecha de liberación debe ser igual o mayor a la fecha actual!');
+    expect(component.getFieldError('date_release')).toBe(
+      'Fecha de liberación debe ser igual o mayor a la fecha actual!'
+    );
 
-    // Test date_revision errors
+    // Test errores en validacion de datos
     const dateRevisionControl = component.productForm.get('date_revision');
     dateRevisionControl?.markAsTouched();
     dateRevisionControl?.setErrors({ required: true });
     expect(component.getFieldError('date_revision')).toBe('Fecha de revisión es requerida!');
 
     dateRevisionControl?.setErrors({ invalidRevisionDate: true });
-    expect(component.getFieldError('date_revision')).toBe('Fecha de revisión debe ser exactamente un año posterior a la fecha de liberación!');
+    expect(component.getFieldError('date_revision')).toBe(
+      'Fecha de revisión debe ser exactamente un año posterior a la fecha de liberación!'
+    );
   });
 
   it('should handle error when loading product', () => {
