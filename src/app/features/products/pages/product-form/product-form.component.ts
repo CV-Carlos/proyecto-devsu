@@ -40,11 +40,17 @@ export class ProductFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
     this.checkEditMode();
+    this.initForm();
+    if (this.isEditMode && this.currentProductId) {
+      this.loadProduct(this.currentProductId);
+    }
   }
 
   initForm(): void {
+    const asyncValidators = this.isEditMode 
+    ? [] 
+    : [ProductIdValidator.createValidator(this.productService, this.currentProductId)];
     this.productForm = this.fb.group({
       id: [
         '',
@@ -53,7 +59,7 @@ export class ProductFormComponent implements OnInit {
           Validators.minLength(VALIDATION_RULES.ID.MIN_LENGTH),
           Validators.maxLength(VALIDATION_RULES.ID.MAX_LENGTH)
         ],
-        [ProductIdValidator.createValidator(this.productService)]
+        asyncValidators
       ],
       name: [
         '',
@@ -90,7 +96,6 @@ export class ProductFormComponent implements OnInit {
     if (id) {
       this.isEditMode = true;
       this.currentProductId = id;
-      this.loadProduct(id);
     }
   }
 
