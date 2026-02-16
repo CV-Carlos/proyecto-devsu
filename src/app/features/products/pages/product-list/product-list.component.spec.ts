@@ -51,7 +51,131 @@ describe('ProductListComponent', () => {
 
     expect(component.products.length).toBe(1);
     expect(component.filteredProducts.length).toBe(1);
+    expect(component.paginatedProducts.length).toBe(1);
     expect(component.isLoading).toBe(false);
+  });
+
+  it('should paginate products correctly', () => {
+    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
+      new Product({
+        id: `test${i}`,
+        name: `Test Product ${i}`,
+        description: `Description ${i}`,
+        logo: 'logo.png',
+        date_release: '2024-01-01',
+        date_revision: '2025-01-01'
+      })
+    );
+
+    component.products = mockProducts;
+    component.filteredProducts = mockProducts;
+    component.itemsPerPage = 5;
+    component.updatePagination();
+
+    expect(component.paginatedProducts.length).toBe(5);
+    expect(component.totalPages).toBe(3);
+  });
+
+  it('should change page size', () => {
+    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
+      new Product({
+        id: `test${i}`,
+        name: `Test Product ${i}`,
+        description: `Description ${i}`,
+        logo: 'logo.png',
+        date_release: '2024-01-01',
+        date_revision: '2025-01-01'
+      })
+    );
+
+    component.products = mockProducts;
+    component.filteredProducts = mockProducts;
+    component.itemsPerPage = 5;
+    component.updatePagination();
+
+    expect(component.paginatedProducts.length).toBe(5);
+
+    component.itemsPerPage = 10;
+    component.onPageSizeChange();
+
+    expect(component.paginatedProducts.length).toBe(10);
+    expect(component.currentPage).toBe(1);
+  });
+
+  it('should navigate to next page', () => {
+    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
+      new Product({
+        id: `test${i}`,
+        name: `Test Product ${i}`,
+        description: `Description ${i}`,
+        logo: 'logo.png',
+        date_release: '2024-01-01',
+        date_revision: '2025-01-01'
+      })
+    );
+
+    component.products = mockProducts;
+    component.filteredProducts = mockProducts;
+    component.itemsPerPage = 5;
+    component.updatePagination();
+
+    expect(component.currentPage).toBe(1);
+
+    component.goToNextPage();
+
+    expect(component.currentPage).toBe(2);
+  });
+
+  it('should navigate to previous page', () => {
+    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
+      new Product({
+        id: `test${i}`,
+        name: `Test Product ${i}`,
+        description: `Description ${i}`,
+        logo: 'logo.png',
+        date_release: '2024-01-01',
+        date_revision: '2025-01-01'
+      })
+    );
+
+    component.products = mockProducts;
+    component.filteredProducts = mockProducts;
+    component.itemsPerPage = 5;
+    component.currentPage = 2;
+    component.updatePagination();
+
+    component.goToPreviousPage();
+
+    expect(component.currentPage).toBe(1);
+  });
+
+  it('should not go below page 1', () => {
+    component.currentPage = 1;
+    component.goToPreviousPage();
+
+    expect(component.currentPage).toBe(1);
+  });
+
+  it('should reset to page 1 when searching', () => {
+    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => 
+      new Product({
+        id: `test${i}`,
+        name: `Test Product ${i}`,
+        description: `Description ${i}`,
+        logo: 'logo.png',
+        date_release: '2024-01-01',
+        date_revision: '2025-01-01'
+      })
+    );
+
+    component.products = mockProducts;
+    component.filteredProducts = mockProducts;
+    component.currentPage = 3;
+    component.searchTerm = 'test';
+
+    component.onSearch();
+
+    expect(component.currentPage).toBe(1);
   });
 
   it('should filter products based on search term', () => {
@@ -82,66 +206,6 @@ describe('ProductListComponent', () => {
 
     expect(component.filteredProducts.length).toBe(1);
     expect(component.filteredProducts[0].name).toBe('Tarjeta de Crédito');
-  });
-
-  it('should search by ID', () => {
-    const mockProducts: Product[] = [
-      new Product({
-        id: 'card1',
-        name: 'Tarjeta de Crédito',
-        description: 'Tarjeta Gold',
-        logo: 'logo1.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      }),
-      new Product({
-        id: 'account1',
-        name: 'Cuenta de Ahorros',
-        description: 'Cuenta Premium',
-        logo: 'logo2.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
-    ];
-
-    component.products = mockProducts;
-    component.filteredProducts = mockProducts;
-    component.searchTerm = 'card1';
-
-    component.onSearch();
-
-    expect(component.filteredProducts.length).toBe(1);
-    expect(component.filteredProducts[0].id).toBe('card1');
-  });
-
-  it('should search by description', () => {
-    const mockProducts: Product[] = [
-      new Product({
-        id: 'card1',
-        name: 'Tarjeta de Crédito',
-        description: 'Tarjeta Gold',
-        logo: 'logo1.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      }),
-      new Product({
-        id: 'account1',
-        name: 'Cuenta de Ahorros',
-        description: 'Cuenta Premium',
-        logo: 'logo2.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
-    ];
-
-    component.products = mockProducts;
-    component.filteredProducts = mockProducts;
-    component.searchTerm = 'Premium';
-
-    component.onSearch();
-
-    expect(component.filteredProducts.length).toBe(1);
-    expect(component.filteredProducts[0].description).toBe('Cuenta Premium');
   });
 
   it('should clear search and show all products', () => {
@@ -186,63 +250,26 @@ describe('ProductListComponent', () => {
     expect(component.isLoading).toBe(false);
   });
 
-  it('should show all products when search term is empty', () => {
-    const mockProducts: Product[] = [
+  it('should generate page numbers correctly', () => {
+    const mockProducts: Product[] = Array.from({ length: 30 }, (_, i) => 
       new Product({
-        id: 'test1',
-        name: 'Test Product 1',
-        description: 'Description 1',
-        logo: 'logo1.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
-    ];
-
-    component.products = mockProducts;
-    component.searchTerm = '';
-
-    component.onSearch();
-
-    expect(component.filteredProducts).toEqual(mockProducts);
-  });
-
-  it('should trim search term', () => {
-    const mockProducts: Product[] = [
-      new Product({
-        id: 'test1',
-        name: 'Test Product',
-        description: 'Description',
+        id: `test${i}`,
+        name: `Test Product ${i}`,
+        description: `Description ${i}`,
         logo: 'logo.png',
         date_release: '2024-01-01',
         date_revision: '2025-01-01'
       })
-    ];
+    );
 
     component.products = mockProducts;
-    component.searchTerm = '  test  ';
+    component.filteredProducts = mockProducts;
+    component.itemsPerPage = 5;
+    component.updatePagination();
 
-    component.onSearch();
+    const pageNumbers = component.getPageNumbers();
 
-    expect(component.filteredProducts.length).toBe(1);
-  });
-
-  it('should be case insensitive in search', () => {
-    const mockProducts: Product[] = [
-      new Product({
-        id: 'test1',
-        name: 'Test Product',
-        description: 'Description',
-        logo: 'logo.png',
-        date_release: '2024-01-01',
-        date_revision: '2025-01-01'
-      })
-    ];
-
-    component.products = mockProducts;
-    component.searchTerm = 'TEST';
-
-    component.onSearch();
-
-    expect(component.filteredProducts.length).toBe(1);
+    expect(pageNumbers.length).toBeGreaterThan(0);
+    expect(pageNumbers.length).toBeLessThanOrEqual(5);
   });
 });

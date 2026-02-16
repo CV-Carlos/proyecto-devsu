@@ -1,0 +1,125 @@
+<div class="form-container">
+  <app-header></app-header>
+
+  <main class="main-content">
+    <a [routerLink]="['/products']" class="back-link">← Volver al listado</a>
+    <div class="form-section">
+      <h2>{{ isEditMode ? 'Editar Producto' : 'Formulario de Registro' }}</h2>
+
+      <!-- Success message -->
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <!-- Row 1: ID y Nombre -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="id">ID</label>
+            <input
+              type="text"
+              id="id"
+              formControlName="id"
+              [class.invalid]="isFieldInvalid('id')"
+              placeholder="Ej: trj-001"
+            >
+            <span *ngIf="getFieldError('id')" class="error-text">
+              {{ getFieldError('id') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              [class.invalid]="isFieldInvalid('name')"
+              placeholder="Ej: Tarjeta de Crédito"
+            >
+            <span *ngIf="getFieldError('name')" class="error-text">
+              {{ getFieldError('name') }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Row 2: Descripción y Logo -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              rows="3"
+              [class.invalid]="isFieldInvalid('description')"
+              placeholder="Ej: Tarjeta de consumo bajo la modalidad de crédito"
+            ></textarea>
+            <span *ngIf="getFieldError('description')" class="error-text">
+              {{ getFieldError('description') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="logo">Logo</label>
+            <input
+              type="text"
+              id="logo"
+              formControlName="logo"
+              [class.invalid]="isFieldInvalid('logo')"
+              placeholder="Ej: https://www.ejemplo.com/logo.png"
+            >
+            <span *ngIf="getFieldError('logo')" class="error-text">
+              {{ getFieldError('logo') }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Row 3: Fecha Liberación y Fecha Revisión -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="date_release">Fecha Liberación</label>
+            <input
+              type="date"
+              id="date_release"
+              formControlName="date_release"
+              [min]="today"
+              [class.invalid]="isFieldInvalid('date_release')"
+            >
+            <span *ngIf="getFieldError('date_release')" class="error-text">
+              {{ getFieldError('date_release') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="date_revision">Fecha Revisión</label>
+            <input
+              type="date"
+              id="date_revision"
+              formControlName="date_revision"
+              [class.invalid]="isFieldInvalid('date_revision')"
+              readonly
+            >
+            <span *ngIf="getFieldError('date_revision')" class="error-text">
+              {{ getFieldError('date_revision') }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="form-actions">
+          <button type="button" (click)="onReset()" class="btn-secondary" [disabled]="isSubmitting">
+            Reiniciar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Enviando...' : (isEditMode ? 'Actualizar' : 'Agregar') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
