@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../../core/services/product.service';
 import { Product } from '../../../../core/models/product.model';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 
 @Component({
@@ -21,6 +21,7 @@ export class ProductListComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   Math = Math;
+  openMenuId: string | null = null;
 
   // Paginación
   itemsPerPage: number = 5;
@@ -28,7 +29,10 @@ export class ProductListComponent implements OnInit {
   totalPages: number = 1;
   pageSizeOptions: number[] = [5, 10, 20];
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -133,5 +137,20 @@ export class ProductListComponent implements OnInit {
     }
     
     return pages;
+  }
+
+  toggleMenu(productId: string): void {
+    this.openMenuId = this.openMenuId === productId ? null : productId;
+  }
+
+  editProduct(productId: string): void {
+    this.openMenuId = null;
+    this.router.navigate(['/products/edit', productId]);
+  }
+
+  deleteProduct(productId: string): void {
+    this.openMenuId = null;
+    // TODO: Implementar modal de confirmación (F6)
+    console.log('Delete product:', productId);
   }
 }

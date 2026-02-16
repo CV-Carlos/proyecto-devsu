@@ -303,8 +303,84 @@
   background-color: #5a6268;
 }
 
+.actions-cell {
+  position: relative;
+  text-align: center;
+  width: 60px;
+}
+
+.btn-menu {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color: #666;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.btn-menu:hover,
+.btn-menu.active {
+  background-color: #f8f9fa;
+  color: #0033a0;
+}
+
+/* Menú contextual */
+.context-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 120px;
+  margin-top: 0.25rem;
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: #333;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #f8f9fa;
+}
+
+.menu-item:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.menu-item:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
+.menu-item-delete {
+  color: #dc3545;
+}
+
+.menu-item-delete:hover {
+  background-color: #fee;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
+  .context-menu {
+    right: auto;
+    left: 0;
+  }
+
   .main-content {
     padding: 1rem;
   }
@@ -340,5 +416,5 @@
     width: 100%;
     justify-content: center;
     margin-top: 0.5rem;
-  }
+  }  
 }
