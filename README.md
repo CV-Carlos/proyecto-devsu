@@ -1,27 +1,65 @@
-# ProyectoDevsu
+# Sistema de Gestión de Productos Financieros
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+## 📋 Requisitos previos
 
-## Development server
+- Node.js v24.13.1 o superior
+- npm v10.9.2 o superior
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 🔧 Instalación y ejecución
 
-## Code scaffolding
+### 1. Instalar dependencias
+```bash
+npm install
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### 2. Iniciar el servidor de desarrollo
+```bash
+npm start
+```
 
-## Build
+La aplicación estará disponible en `http://localhost:4200`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### 3. Iniciar el backend (en otra terminal)
 
-## Running unit tests
+El backend debe estar corriendo en `http://localhost:3002`
+```bash
+cd backend
+npm install
+npm run start:dev
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 🧪 Ejecutar tests
 
-## Running end-to-end tests
+### Tests unitarios
+```bash
+npm test
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Coverage
+```bash
+npm run test:coverage
+```
 
-## Further help
+**Coverage actual:** 84.24% (objetivo: 70%)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🏗️ Estructura del proyecto
+```
+src/
+├── app/
+│   ├── core/              # Servicios, modelos, constantes
+│   ├── features/          # Funcionalidades por módulo
+│   └── shared/            # Componentes y utilidades compartidas
+```
+
+## 🛠️ Scripts disponibles
+
+- `npm start` - Inicia el servidor de desarrollo
+- `npm test` - Ejecuta los tests
+- `npm run test:coverage` - Genera reporte de cobertura
+- `npm run build` - Compila la aplicación para producción
+
+## 📝 Notas
+
+- La aplicación usa un proxy configurado para el backend (`/bp` → `http://localhost:3002`)
+- Las fechas se muestran en formato dd/MM/yyyy
+- El sistema valida que el ID del producto sea único consultando el backend
